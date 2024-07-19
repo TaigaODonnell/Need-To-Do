@@ -5,8 +5,25 @@ import 'package:need_to_do/core/widgets/or_divider.dart';
 import 'package:need_to_do/core/widgets/screen_title.dart';
 import 'package:need_to_do/core/widgets/textfield.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+    formKey.currentState!.validate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,26 +35,41 @@ class LoginPage extends StatelessWidget {
           Center(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CustomField(hintText: "Email"),
-                  const SizedBox(height: 20),
-                  const CustomField(hintText: "Password"),
-                  const SizedBox(height: 20),
-                  const GradientButton(title: "Login"),
-                  const SizedBox(height: 20),
-                  const OrDivider(),
-                  const SizedBox(height: 20),
-                  const GoogleButton(title: "login"),
-                  const SizedBox(height: 20),
-                  InkWell(
-                    onTap: () {
-                      print("Tapped");
-                    },
-                    child: const Text("Forgot Password"),
-                  ),
-                ],
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomField(
+                      hintText: "Email",
+                      controller: emailController,
+                    ),
+                    const SizedBox(height: 20),
+                    CustomField(
+                        hintText: "Password",
+                        controller: passwordController,
+                        obscureText: true),
+                    const SizedBox(height: 20),
+                    GradientButton(
+                      title: "Login",
+                      onPressed: () {},
+                    ),
+                    const SizedBox(height: 20),
+                    const OrDivider(),
+                    const SizedBox(height: 20),
+                    GoogleButton(
+                      title: "login",
+                      onPressed: () {},
+                    ),
+                    const SizedBox(height: 20),
+                    InkWell(
+                      onTap: () {
+                        print("Tapped");
+                      },
+                      child: const Text("Forgot Password"),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -3,7 +3,9 @@ import 'package:need_to_do/core/themes/app_colors.dart';
 
 class GradientButton extends StatelessWidget {
   final String title;
-  const GradientButton({super.key, required this.title});
+  final VoidCallback onPressed;
+  const GradientButton(
+      {super.key, required this.title, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class GradientButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.transparent,
           fixedSize: const Size(395, 50),

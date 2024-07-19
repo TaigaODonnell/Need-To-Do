@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Need To Do',
       theme: AppTheme.darkTheme,
-      home: const SplashScreen(),
+      home: const LoginPage(),
     );
   }
 }
