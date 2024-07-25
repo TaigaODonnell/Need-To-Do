@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "337361933401",
+    "project_id": "need-to-do-debae",
+    "storage_bucket": "need-to-do-debae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337361933401:android:14ffc831d653dc5e870d48",
+        "android_client_info": {
+          "package_name": "NeedToDo.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDz5MijZr_m3bd9l0RlbuwokwVJmuKwQtY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

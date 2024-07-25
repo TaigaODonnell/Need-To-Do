@@ -4,6 +4,9 @@ import 'package:need_to_do/core/widgets/gradient_button.dart';
 import 'package:need_to_do/core/widgets/or_divider.dart';
 import 'package:need_to_do/core/widgets/screen_title.dart';
 import 'package:need_to_do/core/widgets/textfield.dart';
+import 'package:need_to_do/features/auth/viewmodel/auth_viewmodel.dart';
+import 'package:need_to_do/features/home/home_page.dart';
+import 'package:provider/provider.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -29,6 +32,7 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewmodel>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -56,14 +60,37 @@ class _SignupPageState extends State<SignupPage> {
                     const SizedBox(height: 20),
                     GradientButton(
                       title: "Sign Up",
-                      onPressed: () {},
+                      onPressed: () async {
+                        if (formKey.currentState!.validate()) {
+                          await authViewModel.signup(nameController.text,
+                              emailController.text, passwordController.text);
+                          if (authViewModel.errorMessage != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(authViewModel.errorMessage!)));
+                          } else {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const HomePage()));
+                          }
+                        }
+                      },
                     ),
                     const SizedBox(height: 20),
                     const OrDivider(),
                     const SizedBox(height: 20),
                     GoogleButton(
                       title: "signup",
-                      onPressed: () {},
+                      onPressed: () async {
+                        await authViewModel.loginWithGoogle();
+                        if (authViewModel.errorMessage != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(authViewModel.errorMessage!)));
+                        } else {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => const HomePage()));
+                        }
+                      },
                     ),
                     const SizedBox(height: 20),
                   ],

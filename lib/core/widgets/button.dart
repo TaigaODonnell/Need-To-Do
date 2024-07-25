@@ -3,12 +3,13 @@ import 'package:need_to_do/core/themes/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
   final String title;
-  const CustomButton({super.key, required this.title});
+  final VoidCallback onPressed;
+  const CustomButton({super.key, required this.title, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.buttonColor,
         fixedSize: const Size(395, 50),
