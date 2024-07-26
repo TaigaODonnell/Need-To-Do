@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:need_to_do/core/viewmodels/user_provider.dart';
 import 'package:need_to_do/core/widgets/google_button.dart';
 import 'package:need_to_do/core/widgets/gradient_button.dart';
 import 'package:need_to_do/core/widgets/or_divider.dart';
@@ -6,6 +7,7 @@ import 'package:need_to_do/core/widgets/screen_title.dart';
 import 'package:need_to_do/core/widgets/textfield.dart';
 import 'package:need_to_do/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:need_to_do/features/home/home_page.dart';
+import 'package:need_to_do/features/navigation/navigation.dart';
 import 'package:provider/provider.dart';
 
 class SignupPage extends StatefulWidget {
@@ -20,14 +22,14 @@ class _SignupPageState extends State<SignupPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  final Navigation _navigation = Navigation();
 
   @override
   void dispose() {
     nameController.dispose();
     emailController.dispose();
-    passwordController.dispose();
     super.dispose();
-    formKey.currentState!.validate();
+    formKey.currentState?.validate();
   }
 
   @override
@@ -68,9 +70,7 @@ class _SignupPageState extends State<SignupPage> {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(authViewModel.errorMessage!)));
                           } else {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => const HomePage()));
+                            _navigation.pushR(context, const HomePage());
                           }
                         }
                       },
@@ -86,9 +86,7 @@ class _SignupPageState extends State<SignupPage> {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(authViewModel.errorMessage!)));
                         } else {
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => const HomePage()));
+                          _navigation.pushR(context, const HomePage());
                         }
                       },
                     ),

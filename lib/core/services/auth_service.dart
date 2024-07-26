@@ -1,24 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:need_to_do/core/models/user.dart';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<User?> signInWithEmailAndPassword(
+  Future<AppUser?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      return userCredential.user;
+      return AppUser.fromFirebaseUser(userCredential.user!);
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message);
     }
   }
 
-  Future<User?> signUpWithEmailAndPassword(
+  Future<AppUser?> signUpWithEmailAndPassword(
       String name, String email, String password) async {
     try {
       UserCredential userCredential = await _auth
@@ -29,13 +30,16 @@ class FirebaseService {
         await user.reload();
         user = _auth.currentUser;
 
-        await _firestore.collection('users').doc(user!.uid).set({
-          'name': name,
-          'email': email,
-          'uid': user.uid,
-        });
+        AppUser appUser = AppUser.fromFirebaseUser(user!);
+
+        await _firestore
+            .collection('users')
+            .doc(appUser.uid)
+            .set(appUser.toFirestore());
+
+        return appUser;
       }
-      return user;
+      return null;
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message);
     }
@@ -45,7 +49,7 @@ class FirebaseService {
     await _auth.signOut();
   }
 
-  Future<User?> signInWithGoogle() async {
+  Future<AppUser?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
@@ -67,16 +71,62 @@ class FirebaseService {
         DocumentSnapshot doc =
             await _firestore.collection('users').doc(user.uid).get();
         if (!doc.exists) {
-          await _firestore.collection('users').doc(user.uid).set({
-            'name': user.displayName?.split(' ').first ?? "",
-            'email': user.email ?? "",
-            'uid': user.uid,
-          });
+          AppUser appUser = AppUser(
+              name: user.displayName?.split(' ').first ?? "",
+              email: user.email ?? "",
+              uid: user.uid);
+          await _firestore
+              .collection('users')
+              .doc(appUser.uid)
+              .set(appUser.toFirestore());
+          return appUser;
+        } else {
+          return AppUser.fromFirestore(doc.data() as Map<String, dynamic>);
         }
       }
-      return user;
+      return null;
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message);
     }
+  }
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message);
+    }
+  }
+
+  Future<AppUser?> anonymousSignIn() async {
+    try {
+      final userCredential = await _auth.signInAnonymously();
+      print("Signed in with temporary account.");
+      if (userCredential.user != null) {
+        DocumentSnapshot doc = await _firestore
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .get();
+        AppUser appUser =
+            AppUser.fromFirebaseUser(userCredential.user!, isGuest: true);
+        if (!doc.exists) {
+          await _firestore
+              .collection('users')
+              .doc(appUser.uid)
+              .set(appUser.toFirestore());
+          return appUser;
+        }
+        return null;
+      }
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "operation-not-allowed":
+          print("Anonymous auth hasn't been enabled for this project.");
+          break;
+        default:
+          print("Unknown error.");
+      }
+    }
+    return null;
   }
 }

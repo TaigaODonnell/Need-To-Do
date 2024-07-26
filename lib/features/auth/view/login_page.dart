@@ -6,6 +6,7 @@ import 'package:need_to_do/core/widgets/screen_title.dart';
 import 'package:need_to_do/core/widgets/textfield.dart';
 import 'package:need_to_do/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:need_to_do/features/home/home_page.dart';
+import 'package:need_to_do/features/navigation/navigation.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,13 +20,14 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  final Navigation _navigation = Navigation();
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
-    formKey.currentState!.validate();
+    formKey.currentState?.validate();
   }
 
   @override
@@ -64,9 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(authViewModel.errorMessage!)));
                           } else {
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => const HomePage()));
+                            _navigation.pushR(context, const HomePage());
                           }
                         }
                       },
@@ -82,9 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(authViewModel.errorMessage!)));
                         } else {
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => const HomePage()));
+                          _navigation.pushR(context, const HomePage());
                         }
                       },
                     ),
