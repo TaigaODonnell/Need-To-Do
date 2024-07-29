@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:need_to_do/core/models/user.dart';
 import 'package:need_to_do/core/services/auth_service.dart';
 import 'package:need_to_do/core/viewmodels/user_provider.dart';
 
@@ -11,6 +12,17 @@ class AuthViewmodel extends ChangeNotifier {
 
   AuthViewmodel(this._userProvider);
   String? get errorMessage => _errorMessage;
+
+  Future<bool> isLoggedIn() async {
+    final bool isLoggedIn = await _firebaseService.isLoggedIn();
+    if (isLoggedIn) {
+      User? firebaseuser = await _firebaseService.currentUser;
+      if (firebaseuser != null) {
+        _userProvider.setUser(AppUser.fromFirebaseUser(firebaseuser));
+      }
+    }
+    return isLoggedIn;
+  }
 
   Future<void> login(String email, String password) async {
     try {

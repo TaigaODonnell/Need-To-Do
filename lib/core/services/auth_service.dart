@@ -8,6 +8,8 @@ class FirebaseService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  get currentUser => _auth.currentUser;
+
   Future<AppUser?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -128,5 +130,13 @@ class FirebaseService {
       }
     }
     return null;
+  }
+
+  Future<bool> isLoggedIn() async {
+    User? currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      return true;
+    }
+    return false;
   }
 }

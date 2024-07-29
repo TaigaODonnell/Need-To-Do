@@ -6,6 +6,8 @@ class UserProvider extends ChangeNotifier {
 
   AppUser? get user => _user;
 
+  get authStateChanges => null;
+
   void setUser(AppUser? user) {
     _user = user;
     notifyListeners();
