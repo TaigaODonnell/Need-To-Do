@@ -17,4 +17,6 @@ class AppColors {
 
   static const Color buttonColor = Colors.white; // White button
   static const Color buttonTextColor = Color.fromARGB(255, 29, 141, 253);
+
+  static const Color taskColor = Color.fromRGBO(3, 137, 7, 0.8);
 }

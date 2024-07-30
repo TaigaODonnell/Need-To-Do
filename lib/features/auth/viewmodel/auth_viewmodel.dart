@@ -14,17 +14,20 @@ class AuthViewmodel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<bool> isLoggedIn() async {
+    //checks for logged in user, used for auth persistance
     final bool isLoggedIn = await _firebaseService.isLoggedIn();
     if (isLoggedIn) {
       User? firebaseuser = await _firebaseService.currentUser;
       if (firebaseuser != null) {
-        _userProvider.setUser(AppUser.fromFirebaseUser(firebaseuser));
+        _userProvider.setUser(AppUser.fromFirebaseUser(
+            firebaseuser)); //sets user to user provider
       }
     }
     return isLoggedIn;
   }
 
   Future<void> login(String email, String password) async {
+    //logs in user with email and password
     try {
       final user =
           await _firebaseService.signInWithEmailAndPassword(email, password);
@@ -41,6 +44,7 @@ class AuthViewmodel extends ChangeNotifier {
   }
 
   Future<void> loginWithGoogle() async {
+    //logs in user with google
     try {
       final user = await _firebaseService.signInWithGoogle();
       if (user != null) {
@@ -54,6 +58,7 @@ class AuthViewmodel extends ChangeNotifier {
   }
 
   Future<void> signup(String name, String email, String password) async {
+    //signs up user with email and password
     try {
       final user = await _firebaseService.signUpWithEmailAndPassword(
           name, email, password);
@@ -68,6 +73,7 @@ class AuthViewmodel extends ChangeNotifier {
   }
 
   Future<void> anonymousSignIn() async {
+    //signs in user anonymously
     try {
       final user = await _firebaseService.anonymousSignIn();
       if (user != null) {
@@ -81,6 +87,7 @@ class AuthViewmodel extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
+    //signs out user
     try {
       await _firebaseService.signOut();
       _userProvider.clearUser();

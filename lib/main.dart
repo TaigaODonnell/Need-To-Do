@@ -8,6 +8,7 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:need_to_do/core/models/user.dart';
 import 'package:need_to_do/core/themes/theme.dart';
 import 'package:need_to_do/core/viewmodels/user_provider.dart';
+import 'package:need_to_do/features/addingTaskShared/viewmodel/task_viewmodel.dart';
 import 'package:need_to_do/features/auth/view/login_page.dart';
 import 'package:need_to_do/features/auth/view/signup_page.dart';
 import 'package:need_to_do/features/auth/view/welcome_page.dart';
@@ -52,6 +53,10 @@ class MyApp extends StatelessWidget {
             ),
             update: (context, authViewModel, previous) =>
                 previous ?? SplashViewModel(authViewModel),
+          ),
+          ChangeNotifierProxyProvider<UserProvider, TaskViewmodel>(
+            create: (context) => TaskViewmodel(),
+            update: (context, userProvider, taskViewmodel) => TaskViewmodel(),
           ),
         ],
         child: MaterialApp(
